@@ -23,10 +23,10 @@ Nodul A imparte fisierul in blocuri pe care le trimite nodului B, criptate in mo
 Nodul B primeste blocurile, le decripteaza si la final afiseaza plaintextul.
 La fiecare 8 blocuri primite nodul B trimite un mesaj lui KM si asteapta raspunsul acestuia pentru a continua decriptarea.
 
-# Moduri de criptare
+# Moduri de operare
  * ECB
- <img align="center" width="600px" height="600px" src="ecb.jpg">
+ <img align="center" width="700px" height="600px" src="ecb.jpg">
  
  * CFB
- <img align="center" width="600px" height="600px" src="cfb.jpg">
+ <img align="center" width="700px" height="600px" src="cfb.jpg">
 
