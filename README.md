@@ -5,13 +5,13 @@ tema este realizata pe windows in python folosind PyCharm si contine fisierele: 
 
 # Executare
 * pentru a putea executa este nevoie de:
-   python 3.9 instalat
-   comanda: "pip3 install pycryptodome" rulata in directorul proiectului
+   python 3.9 instalat </br>
+   comanda: "pip3 install pycryptodome" rulata in directorul proiectului </br>
 
 * ordinea in care se ruleaza sursele python:
-   KM.py
-   A.py
-   B.py
+   KM.py </br>
+   A.py </br>
+   B.py </br>
 
 # Functionare
 Nodurile A si B se conecteaza la KM si trimit modul de operare ales(ECB sau CFB).
@@ -25,8 +25,8 @@ La fiecare 8 blocuri primite nodul B trimite un mesaj lui KM si asteapta raspuns
 
 # Moduri de criptare
  * ECB
- <img align="center" width="350px" height="200px" src="ecb.jpg">
+ <img align="center" width="500px" height="400px" src="ecb.jpg">
  
  * CFB
- <img align="center" width="350px" height="200px" src="cfb.jpg">
+ <img align="center" width="500px" height="400px" src="cfb.jpg">
 
