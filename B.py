@@ -1,5 +1,6 @@
 import socket
 from Crypto.Cipher import AES
+import time
 
 k3 = b'abababababababab'
 iv = b'dcdcdcdcdcdcdcdc'
@@ -8,8 +9,10 @@ k2 = b""
 vi = b""
 
 
-def xor_function(ba1, ba2):
-    return bytes([_a ^ _b for _a, _b in zip(ba1, ba2)])
+
+def xor_function(s1, s2):
+    return bytes([i ^ j for i, j in zip(s1, s2)])
+
 
 
 def padd_function(text):
@@ -79,11 +82,12 @@ socketA = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 socketA.connect(('127.0.0.1', 5051))
 bl = 0
 plaintext=""
-aes = AES.new(k1, AES.MODE_ECB)
-aesk = AES.new(k3, AES.MODE_ECB)
-while True:
 
-    if MODE == "ecb":
+
+VI = vi
+if MODE == "ecb":
+
+    while True:
 
         if bl % 8 == 0 and bl > 0:
             msg = padd_function(bytes("am primit 8 blocuri", "utf-8"))
@@ -109,5 +113,51 @@ while True:
             plaintext = plaintext + block.decode("utf-8")
         bl = bl + 1
         print("am primit: ", bl, " blocuri")
+
+if MODE == "cfb":
+    aess = AES.new(k2, AES.MODE_CFB, vi)
+    n = socketA.recv(1024)
+    nr = aess.decrypt(n)
+    nrr = str(nr.decode("utf-8"))
+    ress = [int(i) for i in nrr.split() if i.isdigit()]
+    NR = ress[0]
+    print(NR)
+    while True:
+
+
+        aes_k = AES.new(k2, AES.MODE_CFB, vi)
+        vec = aes_k.encrypt(VI)
+
+        if bl % 8 == 0 and bl > 0:
+            msg = padd_function(bytes("am primit 8 blocuri", "utf-8"))
+            aes1 = AES.new(k3, AES.MODE_CFB,iv)
+            en_msg = aes1.encrypt(msg)
+            client.send(en_msg)
+
+            ras = client.recv(1024)
+
+            aes11 = AES.new(k3, AES.MODE_CFB,iv)
+            cont = aes11.decrypt(ras)
+            cont = cont.decode("utf-8")
+            print("Km spune: ", cont)
+
+        time.sleep(1)
+        bloc = socketA.recv(1024)
+        if (bl < NR):
+            VI = bloc
+        bl = bl + 1
+
+
+        block = xor_function(bloc,vec)
+        blc = block.decode("utf-8")
+        print(blc)
+
+        if blc == "gatagatagatagata":
+            print(plaintext)
+            client.send(block)
+            break
+        else:
+            plaintext = plaintext + blc
+            print("am primit: ", bl, " blocuri")
 
 print(plaintext)

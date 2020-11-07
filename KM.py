@@ -133,7 +133,7 @@ while True:
             print("B a terminat")
 
         else:
-            print("B: ", d_m1)
+            print("B: ", d_m2)
 
         if d_m1 == "gatagatagatagata" and d_m2 == "gatagatagatagata":
             break
@@ -145,9 +145,46 @@ while True:
             clientB.send(rasp)
 
 
+    if MODE =="cfb":
+        aes = AES.new(k3,AES.MODE_CFB,iv)
 
-#x = txt.rstrip()
-## cd C:\Users\Iulia\Desktop\SI\SI_tema1
+        m1=clientA.recv(1024)
+        d_m1= aes.decrypt(m1)
+        d_m1 = d_m1.decode("utf-8")
+        d_m1 = d_m1.rstrip()
+        if d_m1 == "gatagatagatagata":
+            print("A a terminat")
+
+        else:
+            print("A: ",d_m1)
+
+        aes2 = AES.new(k3,AES.MODE_CFB,iv)
+
+        m2=clientB.recv(1024)
+
+        d_m2 = aes2.decrypt(m2)
+        d_m2 = d_m2.decode("utf-8")
+        d_m2 = d_m2.rstrip()
+        if d_m2 == "gatagatagatagata":
+            print("B a terminat")
+
+        else:
+            print("B: ", d_m2)
+
+        if d_m1 == "gatagatagatagata" and d_m2 == "gatagatagatagata":
+            break
+
+        if d_m1 == "am trimis 8 blocuri" and d_m2 =="am primit 8 blocuri":
+            ras = padd_function(bytes("continua", "utf-8"))
+            aes = AES.new(k3, AES.MODE_CFB, iv)
+            rasp = aes.encrypt(ras)
+            clientA.send(rasp)
+            clientB.send(rasp)
+
+
+
+
+# cd C:\Users\Iulia\Desktop\SI\tema1
 # python KM.py
 # python A.py
 # python B.py

@@ -1,5 +1,6 @@
 import socket
 from Crypto.Cipher import AES
+import time
 
 k3 = b'abababababababab'
 iv = b'dcdcdcdcdcdcdcdc'
@@ -8,8 +9,10 @@ k2 = b""
 vi = b""
 
 
-def xor_function(ba1, ba2):
-    return bytes([_a ^ _b for _a, _b in zip(ba1, ba2)])
+def xor_function(s1, s2):
+    return bytes([i ^ j for i, j in zip(s1, s2)])
+
+
 
 
 def padd_function(text):
@@ -82,8 +85,7 @@ plaintext = bytes(fisier.read().encode())
 plaintext = padd_function(plaintext)
 
 nr_blocuri = len(plaintext) // AES.block_size
-stop= len(plaintext)-1
-
+stop = len(plaintext) - 1
 
 socketB = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 socketB.bind(('127.0.0.1', 5051))
@@ -92,9 +94,9 @@ socketB.listen(1)
 socketB, addrB = socketB.accept()
 
 if MODE == "ecb":
-    aes = AES.new(k1,AES.MODE_ECB)
-    aesK = AES.new(k3,AES.MODE_ECB)
-    bl=0
+    aes = AES.new(k1, AES.MODE_ECB)
+    aesK = AES.new(k3, AES.MODE_ECB)
+    bl = 0
     for i in range(0, stop, 16):
         j = i + 16
         bloc = plaintext[i:j]
@@ -107,38 +109,67 @@ if MODE == "ecb":
             ras = client.recv(1024)
             cont = aesK.decrypt(ras)
             cont = cont.decode("utf-8")
-            print("Km spune: ",cont)
+            print("Km spune: ", cont)
         socketB.send(en_bloc)
         bl = bl + 1
 
-        print("am trimis:" , bl, " blocuri")
+        print("am trimis:", bl, " blocuri")
 
     gata = b"gatagatagatagata"
-    aes = AES.new(k1,AES.MODE_ECB)
+    aes = AES.new(k1, AES.MODE_ECB)
     end = aes.encrypt(gata)
     socketB.send(end)
     aesk = AES.new(k3, AES.MODE_ECB)
     end = aesk.encrypt(gata)
     client.send(end)
 
+if MODE == "cfb":
+
+    aes1 = AES.new(k2,AES.MODE_CFB,vi)
+    n = str(nr_blocuri)
+    n = padd_function(bytes(n, "utf-8"))
+    en_n = aes1.encrypt(n)
+    socketB.send(en_n)
+
+    VI = vi
+
+    bl = 0
+    for i in range(0, stop, 16):
+        j = i + 16
+        bloc = plaintext[i:j]
+
+        aes_k = AES.new(k2, AES.MODE_CFB, vi)
+        vec = aes_k.encrypt(VI)
+        res = xor_function(vec, bloc)
+
+        VI = res
+
+        if bl % 8 == 0 and bl > 0:
+            msg = padd_function(bytes("am trimis 8 blocuri", "utf-8"))
+            aeskk = AES.new(k3,AES.MODE_CFB,iv)
+            en_msg = aeskk.encrypt(msg)
+            client.send(en_msg)
+
+            ras = client.recv(1024)
+
+            aeskk = AES.new(k3, AES.MODE_CFB, iv)
+            cont = aeskk.decrypt(ras)
+            cont = cont.decode("utf-8")
+            print("Km spune: ", cont)
 
 
+        time.sleep(2)
+        socketB.send(res)
+        bl = bl + 1
 
+        print("am trimis:", bl, " blocuri")
 
+    gata = b"gatagatagatagata"
 
+    aes = AES.new(k2, AES.MODE_CFB,vi)
+    end = aes.encrypt(gata)
+    socketB.send(end)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    aesk = AES.new(k3, AES.MODE_CFB,iv)
+    end = aesk.encrypt(gata)
+    client.send(end)
