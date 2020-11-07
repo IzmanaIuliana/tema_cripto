@@ -4,11 +4,11 @@
 tema este realizata pe windows in python folosind PyCharm si contine fisierele: KM.py (key manager), A.py (nodul A), B.py (nodul B), plaintext.txt 
 
 # Executare
-* pentru a putea executa este nevoie de:
+* pentru a putea executa este nevoie de:</br>
    python 3.9 instalat </br>
    comanda: "pip3 install pycryptodome" rulata in directorul proiectului </br>
 
-* ordinea in care se ruleaza sursele python:
+* ordinea in care se ruleaza sursele python:</br>
    KM.py </br>
    A.py </br>
    B.py </br>
@@ -25,8 +25,8 @@ La fiecare 8 blocuri primite nodul B trimite un mesaj lui KM si asteapta raspuns
 
 # Moduri de criptare
  * ECB
- <img align="center" width="500px" height="400px" src="ecb.jpg">
+ <img align="center" width="600px" height="600px" src="ecb.jpg">
  
  * CFB
- <img align="center" width="500px" height="400px" src="cfb.jpg">
+ <img align="center" width="600px" height="600px" src="cfb.jpg">
 
