@@ -143,18 +143,21 @@ if MODE == "cfb":
 
         time.sleep(1)
         bloc = socketA.recv(1024)
-        if (bl < NR):
-            VI = bloc
+
+        VI = bloc
         bl = bl + 1
 
+        if bl<12:
+            block = xor_function(bloc,vec)
+            blc = block.decode("utf-8")
+            print(blc)
 
-        block = xor_function(bloc,vec)
-        blc = block.decode("utf-8")
-        print(blc)
-
-        if blc == "gatagatagatagata":
-            print(plaintext)
-            client.send(block)
+        if bl == 12:
+            
+            end1 = b"gatagatagatagata"
+            aes1 = AES.new(k3, AES.MODE_CFB, iv)
+            en_msg = aes1.encrypt(end1)
+            client.send(en_msg)
             break
         else:
             plaintext = plaintext + blc
