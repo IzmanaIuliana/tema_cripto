@@ -1,0 +1,1 @@
+Implementati o infrastructura de comunicatie ce utilizeaza criptosistemul AES si modurile de operare pentru cifrurile bloc pentru criptarea traficului intre doua noduri A si B
